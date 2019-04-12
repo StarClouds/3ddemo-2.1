@@ -45,7 +45,7 @@ export default {
                         "></div>`;
       for (let i = 0; i < this.data2.length; i++) {
         const item = this.data2[i];
-        const color = item.color;
+        const color = 'pink';
         console.log(item,'1')
         const box = `<div class="box" style="transform:translateX(${item.WIDTH_POSITION}px) translateY(-${(item.HEIGHT)+item.HEIGHT_POSITION}px) translateZ(${(item.LENGTH/2) + item.LENGTH_POSITION}px)">`;
         const aopCLOSE = `</div>`;
