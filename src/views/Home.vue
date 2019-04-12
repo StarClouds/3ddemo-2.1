@@ -11,7 +11,7 @@
 
 export default {
   name: 'home',
-  props: ['data', 'size', 'view', 'carData', 'step'],
+  props: ['data', 'size', 'view', 'carData', 'step', 'changeFlag'],
   data() {
     return {
       box3D: '',
@@ -29,6 +29,18 @@ export default {
                         background: #44cef6;
                         transform: translateZ(-1px) translateY(0px);
                         top: ${-carData.height + 2}px;"></div>`;
+      const aopBACKW1 = `<div style=" width: ${carData.width}px;
+                        height:${carData.beibugaodu}px;
+                        position: absolute;
+                        background: #44cef6;
+                        transform: translateZ(-1px) translateY(0px);
+                        top: ${-carData.height + 2}px;"></div>`;
+      const aopBACKW2 = `<div style=" width: ${carData.width}px;
+                        height:${carData.beibugaodu2}px;
+                        position: absolute;
+                        background: #44cef6;
+                        transform: translateZ(${carData.dobuchangdu2}px) translateY(0px);
+                        top: ${-carData.beibugaodu2 + 2}px;"></div>`;
       const aopLEFTW = `<div style=" width: ${carData.length}px;
                         height:${carData.height}px;
                         position: absolute;
@@ -42,6 +54,20 @@ export default {
                         top: ${(carData.height - carData.length) / 2}px;
                         background: #177cb0;
                         transform:rotateX(90deg) translateZ(${carData.height/2 - 2}px) translateY(${carData.length / 2}px);
+                        "></div>`;
+      const aopBOTTOMW1 = `<div style=" width: ${carData.width}px;
+                        height:${carData.dobuchangdu}px;
+                        position: absolute;
+                        top: ${(carData.height - carData.dobuchangdu) / 2}px;
+                        background: #177cb0;
+                        transform:rotateX(90deg) translateZ(${carData.height/2 - 2}px) translateY(${carData.dobuchangdu / 2 + carData.dobuchangdu2}px);
+                        "></div>`;
+      const aopBOTTOMW2 = `<div style=" width: ${carData.width}px;
+                        height:${carData.dobuchangdu2}px;
+                        position: absolute;
+                        top: ${(carData.height - carData.dobuchangdu2) / 2}px;
+                        background: #177cb0;
+                        transform:rotateX(90deg) translateZ(${carData.height/2 - 2 + carData.beibugaodu2}px) translateY(${carData.dobuchangdu2 / 2}px);
                         "></div>`;
       for (let i = 0; i < this.data2.length; i++) {
         const item = this.data2[i];
@@ -91,7 +117,9 @@ export default {
         const aopAFTER = aopAFTER1 + aopCOLUMN2 + aopLAYER + aopCLOSE;
         this.box3D += box + aopUP + aopDOWN + aopLEFT + aopRIGHT + aopBEFORE + aopAFTER + aopCLOSE;
       };
-      this.box3D = this.box3D + aopBACKW + aopLEFTW + aopBOTTOMW;
+      // this.box3D = this.box3D + aopBACKW + aopLEFTW + aopBOTTOMW;
+      this.box3D = this.box3D + aopBACKW1 + aopBACKW2 + aopLEFTW + aopBOTTOMW1 + aopBOTTOMW2;
+
     },
     renderBoxLOSER1() {
       for (let i = 0; i < this.data2.length; i++) {
@@ -142,6 +170,14 @@ export default {
       this.carData2.width = this.carData.width / num;
       this.carData2.height = this.carData.height / num;
       this.carData2.length = this.carData.length / num;
+      this.carData2.underPanHeight = this.carData.underPanHeight / num;
+      this.carData2.crankHeight = this.carData.crankHeight / num;
+      this.carData2.crankLength = this.carData.crankLength / num;
+      this.carData2.beibugaodu = this.carData2.height - this.carData2.crankHeight + this.carData2.underPanHeight;
+      this.carData2.beibugaodu2 = this.carData2.crankHeight - this.carData2.underPanHeight;
+      this.carData2.dobuchangdu = this.carData2.length - this.carData2.crankLength;
+      this.carData2.dobuchangdu2 = this.carData2.crankLength;
+
     },
     handleStep(num) {
       let resArr = [];
@@ -154,6 +190,7 @@ export default {
   mounted() {
     this.getdata2(this.size);
     this.renderBox();
+    console.log(this.carData2, 'carData2carData2')
   },
   watch: {
     size() {
@@ -163,6 +200,10 @@ export default {
     step() {
       console.log(this.step);
       this.handleStep(this.step);
+      this.getdata2(this.size);
+      this.renderBox();
+    },
+    changeFlag() {
       this.getdata2(this.size);
       this.renderBox();
     }

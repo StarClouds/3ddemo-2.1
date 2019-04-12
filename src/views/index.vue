@@ -22,6 +22,14 @@
          <el-button @click="changeStep(1)" type="primary">上一步</el-button>
          <el-button @click="changeStep(2)" type="primary">下一步</el-button>
          当前提货点{{step}}步
+         <el-select v-model="step" placeholder="请选择">
+           <el-option
+             v-for="item in arr2"
+             :key="item.value"
+             :label="item.label"
+             :value="item.value">
+           </el-option>
+         </el-select>
        </div>
      </div>
      <div class="infomation" style="float: left; width: 33%;">
@@ -109,7 +117,7 @@
        </ul>
      </div>
      <div style="float: left; width: 20%;">
-       <el-select @change="changepoint" v-model="pointColor" placeholder="请选择">
+       <el-select clearable  @change="changepoint" v-model="pointColor" placeholder="请选择">
          <el-option
            v-for="item in pointData"
            :key="item.color"
@@ -119,7 +127,7 @@
        </el-select>
      </div>
    </div>
-    <plugin3D :data="data" :carData="carData" :size="size" :view="view" :step="step"></plugin3D>
+    <plugin3D :changeFlag="changeFlag" :data="data" :carData="carData" :size="size" :view="view" :step="step"></plugin3D>
   </div>
 </template>
 
@@ -230,18 +238,16 @@ export default {
       },
       step: 0,
       maxstep: 0,
-      carData: {
-        width: 380,
-        height: 470,
-        length: 1750,
-      },
-      infomation: {}
+      carData: {},
+      infomation: {},
+      changeFlag: false,
+      arr2: []
     };
   },
   methods: {
     changeStep(type) {
       if (type === 1) {
-        if (this.step < 1) {
+        if (this.step < 2) {
           this.$message({
             message: '没有上一步了',
             type: 'warning'
@@ -262,22 +268,21 @@ export default {
       };
     },
     changeData(arr) {
-      // step: 6,
-      //   QUANTITY: 5,
-      //   ROW: 1,
-      //   COLUMN: 4,
-      //   LAYER: 1,
-      //   LENGTH_POSITION: 1618.9,
-      //   WIDTH_POSITION: 0,
-      //   HEIGHT_POSITION: 0,
-      //   LENGTH: 77.7,
-      //   WIDTH: 299.6,
-      //   HEIGHT: 197.2,
-      //   color: '#4b5cc4',
-      this.data = arr
+      this.changeFlag = !this.changeFlag
+      this.data = []
+      this.step = 1;
+      this.arr2 = []
       if (this.pointColor) {
-        arr = arr.filter(n => n.color === this.pointColor)
+        arr = JSON.parse(JSON.stringify(arr.filter(n => n.color === this.pointColor)))
       };
+      this.data = arr
+      let obj = {}
+      for (let i = 1; i < arr.length + 1; i++) {
+        obj = {}
+        obj.value = i;
+        obj.label = `第${i}步`;
+        this.arr2.push(obj)
+      }
       console.log(arr, '?')
       if (this.infomation.vehicle.lwhUnit === 'm') {
         for (let i = 0; i < arr.length; i++) {
@@ -312,7 +317,9 @@ export default {
         this.carData.width = arr.width * 100
         this.carData.height = arr.height * 100
         this.carData.length = arr.length * 100
-
+        this.carData.underPanHeight = arr.underPanHeight * 100
+        this.carData.crankHeight = arr.crankHeight * 100
+        this.carData.crankLength = arr.crankLength * 100
       } else {
         this.carData = arr
       }
@@ -323,7 +330,7 @@ export default {
     },
     getData() {
       getdata({
-        loadingId: '1548320237456'
+        loadingId: '1555055367397'
       }).then(res => {
         console.log(res.data.result)
         this.infomation = res.data.result
@@ -337,7 +344,7 @@ export default {
     console.log(getdata)
     this.getData()
     getdata2({
-      loadingId: '1548320237456'
+      loadingId: '1555055367397'
     }).then(res => {
       this.pointData = res.data.result
     })
