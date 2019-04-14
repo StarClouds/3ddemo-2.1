@@ -17,6 +17,48 @@ export default {
       box3D: '',
       data2: [],
       carData2: {},
+      colorList: [
+        {
+          id: '1',
+          color: '#ffff66'
+        },
+        {
+          id: '2',
+          color: '#ccccff'
+        },
+        {
+          id: '3',
+          color: '#99ffcc'
+        },
+        {
+          id: '4',
+          color: '#990099'
+        },
+        {
+          id: '5',
+          color: '#666666'
+        },
+        {
+          id: '6',
+          color: '#33ff66'
+        },
+        {
+          id: '7',
+          color: '#003399'
+        },
+        {
+          id: '8',
+          color: '#336633'
+        },
+        {
+          id: '9',
+          color: '#333300'
+        },
+        {
+          id: '0',
+          color: '#cc0066'
+        }
+      ]
     };
   },
   methods: {
@@ -71,8 +113,8 @@ export default {
                         "></div>`;
       for (let i = 0; i < this.data2.length; i++) {
         const item = this.data2[i];
-        const color = 'pink';
-        console.log(item,'1')
+        // const color = 'pink';
+        const color = this.colorList.find(n => n.id === (item.color % 10).toString()).color;
         const box = `<div class="box" style="transform:translateX(${item.WIDTH_POSITION}px) translateY(-${(item.HEIGHT)+item.HEIGHT_POSITION}px) translateZ(${(item.LENGTH/2) + item.LENGTH_POSITION}px)">`;
         const aopCLOSE = `</div>`;
         const aopUP1 = `<div style="background: ${color};top: ${(item.HEIGHT - item.LENGTH) / 2}px;width: ${item.WIDTH}px;height: ${item.LENGTH}px; transform: rotateX(90deg) translateZ(${item.HEIGHT/2}px);" class="aop up" >`;

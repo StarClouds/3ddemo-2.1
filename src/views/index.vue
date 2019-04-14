@@ -21,8 +21,8 @@
        <div class="block" style="width:400px">
          <el-button @click="changeStep(1)" type="primary">上一步</el-button>
          <el-button @click="changeStep(2)" type="primary">下一步</el-button>
-         当前提货点{{step}}步
-         <el-select v-model="step" placeholder="请选择">
+         当前提货点
+         <el-select style="width: 100px;" v-model="step" placeholder="请选择">
            <el-option
              v-for="item in arr2"
              :key="item.value"
@@ -295,7 +295,7 @@ export default {
           this.data[i].LENGTH = arr[i].length * 100;
           this.data[i].WIDTH = arr[i].width * 100;
           this.data[i].HEIGHT = arr[i].height * 100;
-          this.data[i].color = 'red';
+          this.data[i].color = arr[i].color;
         };
       } else {
         for (let i = 0; i < arr.length; i++) {
@@ -330,12 +330,19 @@ export default {
     },
     getData() {
       getdata({
-        loadingId: '1555055367397'
+        loadingId: this.$route.query.loadingId
       }).then(res => {
         console.log(res.data.result)
         this.infomation = res.data.result
         this.changeData(res.data.result.loadingDeatail)
         this.changeCarData(res.data.result.vehicle)
+      })
+    },
+    getPoint() {
+      getdata2({
+        loadingId: this.$route.query.loadingId
+      }).then(res => {
+        this.pointData = res.data.result
       })
     }
   },
@@ -343,11 +350,8 @@ export default {
     this.maxstep = this.data.length + 1;
     console.log(getdata)
     this.getData()
-    getdata2({
-      loadingId: '1555055367397'
-    }).then(res => {
-      this.pointData = res.data.result
-    })
+    this.getPoint()
+    console.log(this.$route.query.loadingId, 'rrr')
   },
 };
 </script>
